@@ -1,0 +1,32 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: An AWS Lambda application that calls the Lambda API.
+Resources:
+  RestApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: Lambda
+      StageName: dev
+  function:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://lambda-artifacts-8611626de9b32596/fe1e3ff20b2a9cd9e03cf2305bc739c8
+      Handler: com.example.lambda.handler.ApiGatewayHandler
+      Runtime: java8
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /path
+            Method: post
+            RestApiId:
+              Ref: RestApi
+      Description: Java function
+      MemorySize: 512
+      Timeout: 10
+      Policies:
+      - AWSLambdaBasicExecutionRole
+      - AWSLambda_ReadOnlyAccess
+      - AWSXrayWriteOnlyAccess
+      - AWSLambdaVPCAccessExecutionRole
+      Tracing: Active
